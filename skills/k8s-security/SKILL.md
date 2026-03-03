@@ -76,9 +76,9 @@ These rules MUST be followed in all generated code:
 
 1. **Identify the resource type** and load relevant reference files
 2. **Apply all applicable NEVER/ALWAYS rules** from loaded references
-3. **Generate secure-by-default code** with all required security controls
-4. **Include comments** explaining security decisions when non-obvious
-5. **Provide the user** with any additional steps needed (e.g., "create the Secret separately")
+3. **Write the file to disk** using the appropriate path (e.g. `k8s/<resource-name>.yaml`, or alongside existing manifests if the project already has a manifest directory). Do not just display the content — always write the file unless the user explicitly asks to see it first.
+4. **Include comments** in the written file explaining security decisions when non-obvious
+5. **Confirm what was written** and provide the user with any additional steps needed (e.g., "create the Secret separately with: kubectl create secret...")
 
 ### When Reviewing Existing Code
 
