@@ -2,15 +2,12 @@
   "name": "k8s-security-skills",
   "version": "1.0.0",
   "description": "Comprehensive Kubernetes security guardrails for AI code generation",
-  "author": "MetalBear",
-  "repository": "https://github.com/metalbear-co/k8s-security-skills",
-  "skills": [
-    {
-      "name": "k8s-security",
-      "path": "skills/k8s-security",
-      "description": "Enforce security best practices when generating Kubernetes manifests, Dockerfiles, Helm charts, and application code"
-    }
-  ],
+  "author": {
+    "name": "MetalBear"
+  },
+  "homepage": "https://github.com/jakepage91/k8s-security-skills",
+  "repository": "https://github.com/jakepage91/k8s-security-skills",
+  "license": "MIT",
   "keywords": [
     "kubernetes",
     "security",
