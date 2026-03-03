@@ -1,0 +1,35 @@
+{
+  "name": "metalbear-k8s",
+  "owner": {
+    "name": "MetalBear"
+  },
+  "metadata": {
+    "description": "Kubernetes security guardrails for AI code generation — NEVER/ALWAYS rules covering secrets, RBAC, networking, supply chain, LLM security, and more."
+  },
+  "plugins": [
+    {
+      "name": "k8s-security",
+      "source": ".",
+      "description": "Enforce security best practices when generating Kubernetes manifests, Dockerfiles, Helm charts, and application code. Automatically applies NEVER/ALWAYS guardrails across 10 security domains.",
+      "version": "1.0.0",
+      "author": {
+        "name": "MetalBear"
+      },
+      "homepage": "https://github.com/jakepage91/k8s-security-skills",
+      "repository": "https://github.com/jakepage91/k8s-security-skills",
+      "license": "MIT",
+      "keywords": [
+        "kubernetes",
+        "security",
+        "k8s",
+        "devsecops",
+        "containers",
+        "docker",
+        "helm",
+        "rbac",
+        "secrets",
+        "owasp"
+      ]
+    }
+  ]
+}

@@ -4,25 +4,24 @@ A comprehensive collection of AI coding agent skills that enforce security best 
 
 ## Installation
 
-### Claude Code Plugin (recommended)
+### Via Claude Code Marketplace (recommended)
 
-Clone the repository and load it with the `--plugin-dir` flag:
+Add the marketplace, then install the plugin:
 
 ```bash
-git clone https://github.com/metalbear-co/k8s-security-skills
-claude --plugin-dir ./k8s-security-skills
+/plugin marketplace add jakepage91/k8s-security-skills
+/plugin install k8s-security@metalbear-k8s
 ```
 
-The skill is then available as `/k8s-security-skills:k8s-security`.
+The skill activates automatically when generating Kubernetes-related code.
 
-To load it permanently across all sessions, add it to your Claude Code user settings (`~/.claude/settings.json`):
+### Via --plugin-dir (local development)
 
-```json
-{
-  "plugins": [
-    { "source": "/path/to/k8s-security-skills" }
-  ]
-}
+Clone the repository and load it directly:
+
+```bash
+git clone https://github.com/jakepage91/k8s-security-skills
+claude --plugin-dir ./k8s-security-skills
 ```
 
 ### Manual Integration
