@@ -1,12 +1,19 @@
 ---
-description: Run a full Kubernetes security audit of the current repository and write findings to SECURITY-POSTURE.md
+description: Run a Kubernetes security audit and write findings to SECURITY-POSTURE.md. Optionally scope to a specific path: /k8s-security:audit llm-gateway/
 ---
 
-You are performing a comprehensive Kubernetes security audit of this repository. Follow these steps precisely:
+You are performing a comprehensive Kubernetes security audit. Follow these steps precisely:
+
+## Step 0: Determine scope
+
+Check whether a path argument was provided (e.g. `/k8s-security:audit llm-gateway/`).
+
+- **If a path was provided**: restrict all discovery and auditing to that directory. Note the scope at the top of SECURITY-POSTURE.md: `> Scope: <path>`.
+- **If no path was provided**: audit the entire repository from the root.
 
 ## Step 1: Discover all resources to audit
 
-Search the repository for:
+Within the determined scope, search for:
 - All Kubernetes manifests (`**/*.yaml`, `**/*.yml`) that contain `kind:` fields
 - All Dockerfiles (`**/Dockerfile*`)
 - All Helm charts (`**/Chart.yaml`)
@@ -45,6 +52,7 @@ Create or update `SECURITY-POSTURE.md` in the project root with the full audit r
 # Kubernetes Security Posture
 
 > Last audited: <date> by k8s-security-skills
+> Scope: <path or "entire repository">
 
 ## Summary
 

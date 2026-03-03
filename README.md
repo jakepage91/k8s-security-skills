@@ -97,10 +97,11 @@ AI: [Generates]:
 
 ## Auditing Existing Manifests
 
-Once your code has been generated with the skill's guardrails applied, you can audit the whole repository at any point:
+Once your code has been generated with the skill's guardrails applied, you can audit the whole repository or a specific app at any point:
 
 ```
-/k8s-security:audit
+/k8s-security:audit                  # audit entire repo
+/k8s-security:audit llm-gateway/     # audit a specific app or directory
 ```
 
 The audit command:
