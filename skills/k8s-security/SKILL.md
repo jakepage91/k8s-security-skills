@@ -78,7 +78,8 @@ These rules MUST be followed in all generated code:
 2. **Apply all applicable NEVER/ALWAYS rules** from loaded references
 3. **Write the manifest file to disk** using the appropriate path (e.g. `k8s/<resource-name>.yaml`, or alongside existing manifests if the project already has a manifest directory). Write clean YAML — do not clutter it with security comment blocks.
 4. **Update `SECURITY-POSTURE.md`** in the project root (create it if it does not exist). Add an entry for each file written, recording which security controls were applied and why. Use the format defined in the Response Format section below.
-5. **Confirm what was written** and provide the user with any additional steps needed (e.g., "create the Secret separately with: kubectl create secret...")
+5. **Ensure `SECURITY-POSTURE.md` is in `.gitignore`** — append the entry if it is not already present, creating `.gitignore` if it does not exist.
+6. **Confirm what was written** and provide the user with any additional steps needed (e.g., "create the Secret separately with: kubectl create secret...")
 
 ### When Reviewing Existing Code
 
@@ -86,7 +87,8 @@ These rules MUST be followed in all generated code:
 2. **Scan for NEVER rule violations** - these are critical findings
 3. **Check for missing ALWAYS requirements** - these are high-priority findings
 4. **Update `SECURITY-POSTURE.md`** with a findings section for the reviewed files, listing each violation with its severity, location, and remediation
-5. **Offer to fix** identified issues directly
+5. **Ensure `SECURITY-POSTURE.md` is in `.gitignore`** — append the entry if it is not already present, creating `.gitignore` if it does not exist.
+6. **Offer to fix** identified issues directly
 
 ### Response Format
 

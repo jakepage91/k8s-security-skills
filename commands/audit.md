@@ -39,7 +39,7 @@ For each discovered file, check every applicable NEVER/ALWAYS rule. Classify eac
 
 ## Step 4: Write SECURITY-POSTURE.md
 
-Create or update `SECURITY-POSTURE.md` in the project root with the full audit results using this structure:
+Create or update `SECURITY-POSTURE.md` in the project root with the full audit results using this structure. Then ensure `SECURITY-POSTURE.md` is listed in `.gitignore` — append the entry if missing, creating `.gitignore` if it does not exist.
 
 ```markdown
 # Kubernetes Security Posture
