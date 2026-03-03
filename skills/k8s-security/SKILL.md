@@ -111,10 +111,12 @@ When identifying security issues during a review, append a findings section:
 ```markdown
 ## Security Review: `<file>` (<date>)
 
+> This audit is read-only. No files were modified.
+
 ### CRITICAL: [Issue Title]
 - **Rule**: NEVER/ALWAYS reference
-- **Risk**: What could happen
-- **Fix**: Exact remediation
+- **Risk**: What could happen if not addressed
+- **Recommended fix**: Exact remediation with a corrected YAML/code snippet, ready to apply when the team is ready to deploy the change
 ```
 
 ## Quick Reference: Security Controls by Resource Type

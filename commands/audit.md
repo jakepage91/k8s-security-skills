@@ -77,6 +77,14 @@ Create or update `SECURITY-POSTURE.md` in the project root with the full audit r
 - `path/to/clean-file.yaml` — all controls present
 ```
 
-## Step 5: Offer to fix
+## Step 5: Summarise and recommend
 
-After writing SECURITY-POSTURE.md, list all CRITICAL and HIGH findings in your reply and ask the user which ones they want fixed immediately. Fix them one file at a time, updating SECURITY-POSTURE.md to reflect resolved findings as you go.
+After writing SECURITY-POSTURE.md, output a concise summary in the chat:
+
+- The total finding counts by severity
+- The top 3 most urgent issues with a one-line description of each
+- A reminder that **no files have been modified** — this audit is read-only
+
+Do NOT auto-fix anything. The manifests may be running in production and changes require a deliberate deployment process. Instead, for each CRITICAL and HIGH finding, include a concrete recommendation in SECURITY-POSTURE.md under a `**Recommended fix:**` field so the user has everything they need to act when ready.
+
+If the user explicitly asks to fix a specific finding after the audit, address it then — one file at a time, with the user's confirmation before writing.
