@@ -1,7 +1,7 @@
 {
-  "name": "k8s-security",
-  "version": "1.0.1",
-  "description": "Comprehensive Kubernetes security guardrails for AI code generation",
+  "name": "k8s-validation",
+  "version": "2.0.0",
+  "description": "Kubernetes validation guardrails for AI code generation — security best practices, code logic checks, and data-flow correctness",
   "author": {
     "name": "MetalBear"
   },
@@ -10,7 +10,9 @@
   "license": "MIT",
   "keywords": [
     "kubernetes",
+    "validation",
     "security",
+    "code-quality",
     "k8s",
     "devsecops",
     "containers",

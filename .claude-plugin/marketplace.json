@@ -4,17 +4,17 @@
     "name": "MetalBear"
   },
   "metadata": {
-    "description": "Kubernetes security guardrails for AI code generation — NEVER/ALWAYS rules covering secrets, RBAC, networking, supply chain, LLM security, and more."
+    "description": "Kubernetes validation guardrails for AI code generation — security, code logic, and data-flow correctness checks via NEVER/ALWAYS rules."
   },
   "plugins": [
     {
-      "name": "k8s-security",
+      "name": "k8s-validation",
       "source": {
         "source": "github",
         "repo": "jakepage91/k8s-security-skills"
       },
-      "description": "Enforce security best practices when generating Kubernetes manifests, Dockerfiles, Helm charts, and application code. Automatically applies NEVER/ALWAYS guardrails across 10 security domains.",
-      "version": "1.0.1",
+      "description": "Validate Kubernetes manifests, Dockerfiles, Helm charts, and application code for security best practices and code logic errors. Automatically applies NEVER/ALWAYS guardrails across 11 validation domains.",
+      "version": "2.0.0",
       "author": {
         "name": "MetalBear"
       },
@@ -23,7 +23,9 @@
       "license": "MIT",
       "keywords": [
         "kubernetes",
+        "validation",
         "security",
+        "code-quality",
         "k8s",
         "devsecops",
         "containers",

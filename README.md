@@ -1,19 +1,16 @@
 # Kubernetes Validation Skills
 
-A comprehensive collection of AI coding agent skills that enforce security best practices and catch code logic errors when generating or modifying code in Kubernetes environments. These skills act as persistent guardrails, automatically applying security rules and correctness checks when AI assistants generate Kubernetes manifests, Dockerfiles, application code, and Helm charts.
+A comprehensive collection of AI coding agent skills that validate Kubernetes manifests, application code, Dockerfiles, and Helm charts. These skills act as persistent guardrails — catching security misconfigurations, code logic errors, and data-flow bugs before they reach production.
 
 ## Installation
 
-### Via Claude Code Marketplace (recommended)
-
-Add the marketplace, then install the plugin:
+### Claude Code Plugin (recommended)
 
 ```bash
-/plugin marketplace add jakepage91/k8s-security-skills
-/plugin install k8s-security@metalbear-k8s
+/plugin install k8s-validation@jakepage91/k8s-security-skills
 ```
 
-The skill activates automatically when generating Kubernetes-related code.
+The skill activates automatically when generating Kubernetes-related code. The audit command becomes available as `/k8s-validation:audit`.
 
 ### Via --plugin-dir (local development)
 
@@ -24,24 +21,15 @@ git clone https://github.com/jakepage91/k8s-security-skills
 claude --plugin-dir ./k8s-security-skills
 ```
 
-### Manual Integration
-
-Reference in your `CLAUDE.md`, `.cursorrules`, or `copilot-instructions.md`:
-
-```markdown
-Always follow the rules defined in:
-- k8s-security-skills/skills/k8s-security/SKILL.md
-```
-
 ## Available Skills
 
 | Skill | Description |
 |-------|-------------|
-| **k8s-security** | Comprehensive Kubernetes guardrails covering security, code logic, secrets, RBAC, networking, supply chain, and more |
+| **k8s-validation** | Kubernetes guardrails covering security, code logic, data-flow correctness, secrets, RBAC, networking, supply chain, and more |
 
 ## What This Validates
 
-The k8s-security skill enforces NEVER/ALWAYS rules across 11 domains:
+The k8s-validation skill enforces NEVER/ALWAYS rules across 11 domains:
 
 ### Security
 1. **Secrets Management** - Never hardcode secrets, always use Kubernetes Secrets or external secret managers
@@ -102,11 +90,11 @@ AI: [Validates]:
 
 ## Auditing Existing Code
 
-Once your code has been generated with the skill's guardrails applied, you can audit the whole repository or a specific app at any point:
+Audit the whole repository or a specific app at any point:
 
 ```
-/k8s-security:audit                  # audit entire repo
-/k8s-security:audit llm-gateway/     # audit a specific app or directory
+/k8s-validation:audit                  # audit entire repo
+/k8s-validation:audit llm-gateway/     # audit a specific app or directory
 ```
 
 The audit command:
@@ -124,7 +112,7 @@ Example `SECURITY-POSTURE.md` output:
 ```markdown
 # Security Posture
 
-> Last audited: 2026-03-05 by k8s-security-skills
+> Last audited: 2026-03-05 by k8s-validation
 
 ## Summary
 
@@ -149,8 +137,8 @@ Example `SECURITY-POSTURE.md` output:
 ```
 .
 ├── commands/
-│   └── audit.md              # /k8s-security:audit slash command
-└── skills/k8s-security/
+│   └── audit.md              # /k8s-validation:audit slash command
+└── skills/k8s-validation/
     ├── SKILL.md              # Main skill instructions (auto-triggered)
     ├── README.md             # Skill documentation
     └── references/           # Detailed rules

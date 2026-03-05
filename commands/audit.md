@@ -1,12 +1,12 @@
 ---
-description: Run a Kubernetes best-practices audit (security, code logic, correctness) and write findings to SECURITY-POSTURE.md. Optionally scope to a specific path: /k8s-security:audit llm-gateway/
+description: Run a Kubernetes best-practices audit (security, code logic, correctness) and write findings to SECURITY-POSTURE.md. Optionally scope to a specific path: /k8s-validation:audit llm-gateway/
 ---
 
 You are performing a comprehensive Kubernetes best-practices audit covering security, code correctness, and logic errors. Follow these steps precisely:
 
 ## Step 0: Determine scope
 
-Check whether a path argument was provided (e.g. `/k8s-security:audit llm-gateway/`).
+Check whether a path argument was provided (e.g. `/k8s-validation:audit llm-gateway/`).
 
 - **If a path was provided**: restrict all discovery and auditing to that directory. Note the scope at the top of SECURITY-POSTURE.md: `> Scope: <path>`.
 - **If no path was provided**: audit the entire repository from the root.

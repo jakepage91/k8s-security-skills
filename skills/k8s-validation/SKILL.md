@@ -1,13 +1,13 @@
 ---
-name: k8s-security
-description: Enforce comprehensive security best practices and catch code logic errors when generating or modifying Kubernetes manifests, Dockerfiles, Helm charts, and application code. Automatically applies security guardrails and correctness checks based on NEVER/ALWAYS rules.
+name: k8s-validation
+description: Validate Kubernetes manifests, Dockerfiles, Helm charts, and application code for security best practices, code logic errors, and data-flow correctness. Automatically applies NEVER/ALWAYS guardrails across 11 validation domains.
 metadata:
   author: MetalBear
-  version: "1.1"
+  version: "2.0"
   last_updated: "2026-03-05"
 ---
 
-# Kubernetes Best Practices Skill
+# Kubernetes Validation Skill
 
 ## Purpose
 
