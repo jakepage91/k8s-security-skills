@@ -1,17 +1,17 @@
 ---
 name: k8s-security
-description: Enforce comprehensive security best practices when generating or modifying Kubernetes manifests, Dockerfiles, Helm charts, and application code. Automatically applies security guardrails based on NEVER/ALWAYS rules.
+description: Enforce comprehensive security best practices and catch code logic errors when generating or modifying Kubernetes manifests, Dockerfiles, Helm charts, and application code. Automatically applies security guardrails and correctness checks based on NEVER/ALWAYS rules.
 metadata:
   author: MetalBear
-  version: "1.0"
-  last_updated: "2026-03-03"
+  version: "1.1"
+  last_updated: "2026-03-05"
 ---
 
-# Kubernetes Security Skill
+# Kubernetes Best Practices Skill
 
 ## Purpose
 
-Act as a persistent security guardrail for AI code generation in Kubernetes environments. This skill enforces concrete, actionable security rules across 10 critical domains whenever you generate or modify:
+Act as a persistent guardrail for AI code generation in Kubernetes environments — covering both security and code correctness. This skill enforces concrete, actionable rules across security, logic correctness, and data-flow integrity whenever you generate or modify:
 
 - Kubernetes manifests (Deployments, Services, Ingress, ConfigMaps, Secrets, etc.)
 - Dockerfiles and container configurations
@@ -35,6 +35,7 @@ references/llm-ai-security.md           - For LLM/AI workloads (OWASP LLM Top 10
 references/helm-manifest-security.md    - For Helm charts, raw manifests
 references/rbac-service-accounts.md     - For RBAC, ServiceAccounts
 references/observability-incident-response.md - For logging, metrics, alerting
+references/code-logic.md                - For code correctness, data-flow bugs, HTTP/SQL mismatches
 references/pre-push-checklist.md        - Final verification before commit
 ```
 

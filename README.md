@@ -1,6 +1,6 @@
-# Kubernetes Security Skills
+# Kubernetes Validation Skills
 
-A comprehensive collection of AI coding agent skills that enforce security best practices when generating or modifying code in Kubernetes environments. These skills act as persistent security guardrails, automatically applying security rules when AI assistants generate Kubernetes manifests, Dockerfiles, application code, and Helm charts.
+A comprehensive collection of AI coding agent skills that enforce security best practices and catch code logic errors when generating or modifying code in Kubernetes environments. These skills act as persistent guardrails, automatically applying security rules and correctness checks when AI assistants generate Kubernetes manifests, Dockerfiles, application code, and Helm charts.
 
 ## Installation
 
@@ -29,7 +29,7 @@ claude --plugin-dir ./k8s-security-skills
 Reference in your `CLAUDE.md`, `.cursorrules`, or `copilot-instructions.md`:
 
 ```markdown
-Always follow the security rules defined in:
+Always follow the rules defined in:
 - k8s-security-skills/skills/k8s-security/SKILL.md
 ```
 
@@ -37,12 +37,13 @@ Always follow the security rules defined in:
 
 | Skill | Description |
 |-------|-------------|
-| **k8s-security** | Comprehensive Kubernetes security guardrails covering secrets, RBAC, networking, supply chain, and more |
+| **k8s-security** | Comprehensive Kubernetes guardrails covering security, code logic, secrets, RBAC, networking, supply chain, and more |
 
-## What This Enforces
+## What This Validates
 
-The k8s-security skill enforces NEVER/ALWAYS rules across 10 critical security domains:
+The k8s-security skill enforces NEVER/ALWAYS rules across 11 domains:
 
+### Security
 1. **Secrets Management** - Never hardcode secrets, always use Kubernetes Secrets or external secret managers
 2. **Pod & Container Security** - SecurityContext hardening, resource limits, non-root execution
 3. **Network Exposure & Ingress** - Authentication on endpoints, NetworkPolicies, TLS requirements
@@ -54,6 +55,9 @@ The k8s-security skill enforces NEVER/ALWAYS rules across 10 critical security d
 9. **RBAC & Service Accounts** - Least privilege, dedicated service accounts
 10. **Observability & Incident Response** - Secure logging, metrics, alerting
 
+### Code Logic & Correctness
+11. **Code Logic** - HTTP method/parameter source mismatches, SQL alias/app code mismatches, silently skipped WHERE clauses, response shape mismatches, async/await errors, end-to-end data flow verification
+
 ## How It Works
 
 When installed, the skill automatically activates when you:
@@ -62,12 +66,14 @@ When installed, the skill automatically activates when you:
 - Write Dockerfiles or container configurations
 - Create Helm charts or Kustomize overlays
 - Implement webhook handlers or API endpoints
+- Write database queries or ORM code
 - Configure service-to-service authentication
 - Work with LLM/AI workloads in Kubernetes
 
-The AI assistant will apply security rules and either:
-- Generate secure code by default
-- Flag security issues in existing code
+The AI assistant will:
+- Generate secure, correct code by default
+- Flag security issues and logic bugs in existing code
+- Trace data flow from request input through queries to response output
 - Suggest remediations with correct/incorrect examples
 
 ## Example Usage
@@ -86,16 +92,15 @@ AI: [Generates deployment with]:
 ```
 
 ```
-User: "Add database credentials to my app"
+User: "Add a GET endpoint that filters by conference"
 
-AI: [Generates]:
-- Kubernetes Secret manifest (with placeholder for actual values)
-- Environment variables using secretKeyRef
-- Fail-fast startup validation code
-- Warning about never committing actual secret values
+AI: [Validates]:
+- Parameters read from req.query (not req.body) for GET requests
+- SQL column aliases match the JS property names used downstream
+- WHERE clause doesn't silently return all rows when filter param is missing
 ```
 
-## Auditing Existing Manifests
+## Auditing Existing Code
 
 Once your code has been generated with the skill's guardrails applied, you can audit the whole repository or a specific app at any point:
 
@@ -105,40 +110,38 @@ Once your code has been generated with the skill's guardrails applied, you can a
 ```
 
 The audit command:
-1. Discovers all Kubernetes manifests, Dockerfiles, Helm charts, and CI/CD pipeline files
-2. Loads only the reference files relevant to what was found — skipping rules that can't apply (e.g. Helm rules are skipped if no `Chart.yaml` exists)
-3. Checks every file against applicable NEVER/ALWAYS rules
-4. Classifies each finding by severity: **CRITICAL**, **HIGH**, **MEDIUM**, **INFO**
-5. Writes results to `SECURITY-POSTURE.md` in the project root with recommended fixes
-6. Outputs a summary of finding counts and the top 3 most urgent issues
+1. Discovers all Kubernetes manifests, Dockerfiles, Helm charts, CI/CD pipeline files, and application code with HTTP endpoints or database queries
+2. Loads only the reference files relevant to what was found
+3. **Reads application code files fully** and traces data flow end-to-end
+4. Checks every file against applicable NEVER/ALWAYS rules (security + code logic)
+5. Classifies each finding by severity: **CRITICAL**, **HIGH**, **MEDIUM**, **INFO**
+6. Writes results to `SECURITY-POSTURE.md` in the project root with recommended fixes
 
-> **Read-only**: the audit never modifies your manifests. Findings include concrete remediation snippets so you can apply fixes deliberately when ready — this matters when manifests are already running in production.
+> **Read-only**: the audit never modifies your code. Findings include concrete remediation snippets so you can apply fixes deliberately.
 
 Example `SECURITY-POSTURE.md` output:
 
 ```markdown
-# Kubernetes Security Posture
+# Security Posture
 
-> Last audited: 2026-03-03 by k8s-security-skills
+> Last audited: 2026-03-05 by k8s-security-skills
 
 ## Summary
 
 | Severity | Count |
 |----------|-------|
-| CRITICAL | 2     |
+| CRITICAL | 3     |
 | HIGH     | 5     |
-| MEDIUM   | 3     |
+| MEDIUM   | 2     |
 | INFO     | 1     |
 
-## Findings by File
+## Findings
 
-### `k8s/deployment.yaml`
-
-#### CRITICAL: Hardcoded API key in environment variable
-- **Rule**: secrets-management Rule 1
-- **Location**: spec.containers[0].env[2].value
-- **Risk**: Secret exposed in version control and cluster etcd
-- **Recommended fix**: Use secretKeyRef instead — `kubectl create secret generic api-key --from-literal=key=<value>`
+| Sev | File | Issue | Fix |
+|-----|------|-------|-----|
+| CRITICAL | `k8s/deployment.yaml` | Hardcoded API key in env | Use secretKeyRef |
+| CRITICAL | `src/routes/feed.js:18` | req.body in GET handler — filter silently skipped | Change to req.query |
+| CRITICAL | `src/routes/feed.js:39` | SQL column not aliased — JS reads r.slug but query returns r.conference | Add AS slug |
 ```
 
 ## Skill Components
@@ -150,7 +153,7 @@ Example `SECURITY-POSTURE.md` output:
 └── skills/k8s-security/
     ├── SKILL.md              # Main skill instructions (auto-triggered)
     ├── README.md             # Skill documentation
-    └── references/           # Detailed security rules
+    └── references/           # Detailed rules
         ├── secrets-management.md
         ├── pod-container-security.md
         ├── network-exposure.md
@@ -161,6 +164,8 @@ Example `SECURITY-POSTURE.md` output:
         ├── helm-manifest-security.md
         ├── rbac-service-accounts.md
         ├── observability-incident-response.md
+        ├── app-security.md
+        ├── code-logic.md
         └── pre-push-checklist.md
 ```
 

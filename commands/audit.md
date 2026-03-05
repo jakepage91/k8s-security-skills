@@ -1,8 +1,8 @@
 ---
-description: Run a Kubernetes security audit and write findings to SECURITY-POSTURE.md. Optionally scope to a specific path: /k8s-security:audit llm-gateway/
+description: Run a Kubernetes best-practices audit (security, code logic, correctness) and write findings to SECURITY-POSTURE.md. Optionally scope to a specific path: /k8s-security:audit llm-gateway/
 ---
 
-You are performing a comprehensive Kubernetes security audit. Follow these steps precisely:
+You are performing a comprehensive Kubernetes best-practices audit covering security, code correctness, and logic errors. Follow these steps precisely:
 
 ## Step 0: Determine scope
 
@@ -19,6 +19,7 @@ Within the determined scope, search for:
 - All Helm charts (`**/Chart.yaml`)
 - Any CI/CD pipeline files that deploy to Kubernetes (`.github/workflows/*.yml`, etc.)
 - Application code: search for files containing route/endpoint definitions using patterns like `@app.route`, `router.get`, `router.post`, `app.get`, `app.post`, `@router.`, `func.*Handler`, `http.HandleFunc` in `**/*.py`, `**/*.js`, `**/*.ts`, `**/*.go`, `**/*.java`, `**/*.rb`. Do **not** read all app files — only grep for these patterns to find files that define HTTP endpoints.
+- Application code with database queries: search for files containing SQL queries or ORM calls using patterns like `SELECT`, `INSERT`, `UPDATE`, `DELETE`, `db.query`, `pool.query`, `.execute(`, `.raw(`, `knex(`, `prisma.`, `sequelize.` in the same file types. These are candidates for logic-bug analysis.
 
 List each file found before proceeding.
 
@@ -36,6 +37,7 @@ Based on what was found in Step 1, load only the reference files that apply. Do 
 | Any `Chart.yaml` (Helm chart) found | `references/helm-manifest-security.md` |
 | Any manifest or code file referencing inter-service auth, mTLS, JWT, or service mesh annotations | `references/internal-service-auth.md` |
 | Any application code with HTTP endpoint definitions found | `references/app-security.md` |
+| Any application code with HTTP endpoints **or** database queries found | `references/code-logic.md` |
 | Any application code with file upload or file path operations (`send_file`, `open(`, `fs.readFile`, `os.path`, `filepath.Join`) | `references/file-handling-security.md` |
 | Any file with LLM/AI indicators: filenames or content containing `llm`, `openai`, `anthropic`, `langchain`, `embeddings`, `prompt`, `completion` | `references/llm-ai-security.md` |
 | Any k8s manifest or application code found (i.e. almost always) | `references/observability-incident-response.md` |
@@ -44,10 +46,24 @@ List which reference files were loaded and which were skipped (with the reason) 
 
 ## Step 3: Audit each file
 
-For each discovered file, check every applicable NEVER/ALWAYS rule. Classify each finding as:
+For each discovered file, check every applicable NEVER/ALWAYS rule from both security and code-logic references. **Read application code files fully** — do not just grep for patterns. Trace data flow from request input through query construction to response output.
 
-- **CRITICAL** — a NEVER rule is violated (e.g. hardcoded secret, privileged: true, wildcard RBAC)
-- **HIGH** — a required ALWAYS control is missing (e.g. no SecurityContext, no resource limits, no NetworkPolicy)
+### Security checks
+Apply all NEVER/ALWAYS rules from security reference files (secrets, pod security, RBAC, etc.).
+
+### Code logic checks (for application code files)
+For every HTTP handler / route, verify:
+1. **Parameter source matches HTTP method** — `req.body` only in POST/PUT/PATCH, `req.query`/`req.params` in GET/DELETE
+2. **SQL aliases match downstream property access** — if JS reads `row.slug`, the SQL must `SELECT ... AS slug`
+3. **WHERE clauses are not silently skipped** — conditional filters must validate required params, not silently return all rows
+4. **Response shape matches consumer expectations** — field names in the response must match what frontend/callers destructure
+5. **Async operations are properly awaited** — database calls, HTTP requests, file I/O
+6. **Data flows end-to-end** — a request param that's read must actually reach the query; a query result field must reach the response
+
+Classify each finding as:
+
+- **CRITICAL** — a NEVER rule is violated (e.g. hardcoded secret, privileged: true, wildcard RBAC) OR a logic bug that causes incorrect data to be returned silently (e.g. wrong parameter source, missing SQL alias, skipped WHERE clause)
+- **HIGH** — a required ALWAYS control is missing (e.g. no SecurityContext, no resource limits, no NetworkPolicy) OR a data-flow gap that produces wrong results under specific conditions
 - **MEDIUM** — a best-practice gap that increases risk but is not an immediate violation
 - **INFO** — an observation or improvement opportunity
 
