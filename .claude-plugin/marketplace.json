@@ -14,7 +14,7 @@
         "repo": "jakepage91/k8s-security-skills"
       },
       "description": "Validate Kubernetes manifests, Dockerfiles, Helm charts, and application code for security best practices and code logic errors. Automatically applies NEVER/ALWAYS guardrails across 11 validation domains.",
-      "version": "2.0.0",
+      "version": "3.0.0",
       "author": {
         "name": "MetalBear"
       },

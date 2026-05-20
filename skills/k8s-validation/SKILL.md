@@ -120,12 +120,17 @@ These rules MUST be followed in all generated code:
 
 ### When generating new resources
 
-1. Identify the resource type and load the relevant security AND correctness references.
-2. Apply all applicable NEVER/ALWAYS rules from loaded references.
-3. Write the file to disk at the appropriate path. Write clean code or YAML — do not clutter it with rule comment blocks.
-4. Update `SECURITY-POSTURE.md` in the project root (create it if needed). Add an entry recording which controls were applied and why.
-5. Ensure `SECURITY-POSTURE.md` is in `.gitignore`.
-6. Confirm what was written and provide any additional steps needed (e.g. "create the Secret separately with: `kubectl create secret ...`").
+1. **Scan the existing codebase first.** Before generating any code, search for:
+   - Existing auth middleware and decorators: grep for `@require_auth`, `@login_required`, `requireAuth`, `authenticate`, `authMiddleware`, `verifyToken`. Use what already exists — do not invent a new auth pattern.
+   - Existing sanitization/filtering utilities: grep for `filter_pii`, `sanitize`, `redact`, `scrub`. If one exists, import and use it.
+   - Existing error handling patterns: grep for `@app.errorhandler`, `app.use.*err`, `handleError`. Match the project convention.
+   - Existing test location and naming convention: check `tests/`, `__tests__/`, `spec/` to understand where integration tests live.
+2. Identify the resource type and load the relevant security AND correctness references.
+3. Apply all applicable NEVER/ALWAYS rules from loaded references.
+4. Write the file to disk at the appropriate path. Write clean code or YAML — do not clutter it with rule comment blocks.
+5. Update `SECURITY-POSTURE.md` in the project root (create it if needed). Add an entry recording which controls were applied and why.
+6. Ensure `SECURITY-POSTURE.md` is in `.gitignore`.
+7. Confirm what was written and provide any additional steps needed (e.g. "create the Secret separately with: `kubectl create secret ...`").
 
 ### When reviewing existing code
 
@@ -178,6 +183,7 @@ When identifying issues during a review, append a findings section:
 | Dockerfile | Multi-stage, pinned images, no `curl \| bash` |
 | Helm chart | Templated secrets, PDB, probes |
 | New HTTP handler | Auth, input validation, integration test, env var matches Secret |
+| New LLM/AI endpoint | Auth, input length limit, output filtered for PII, token budget, rate limiting |
 | New SQL query | Aliases match consumer code, WHERE clause is required-or-explicit |
 | New API response | Shape matches consumers, pagination fields present |
 
