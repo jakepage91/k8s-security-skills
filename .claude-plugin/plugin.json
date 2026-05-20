@@ -1,6 +1,6 @@
 {
   "name": "k8s-validation",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Kubernetes validation guardrails for AI code generation — security best practices, code logic checks, and data-flow correctness",
   "author": {
     "name": "MetalBear"

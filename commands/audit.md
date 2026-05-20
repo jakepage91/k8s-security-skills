@@ -20,6 +20,7 @@ Within the determined scope, search for:
 - Any CI/CD pipeline files that deploy to Kubernetes (`.github/workflows/*.yml`, etc.)
 - Application code: search for files containing route/endpoint definitions using patterns like `@app.route`, `router.get`, `router.post`, `app.get`, `app.post`, `@router.`, `func.*Handler`, `http.HandleFunc` in `**/*.py`, `**/*.js`, `**/*.ts`, `**/*.go`, `**/*.java`, `**/*.rb`. Do **not** read all app files — only grep for these patterns to find files that define HTTP endpoints.
 - Application code with database queries: search for files containing SQL queries or ORM calls using patterns like `SELECT`, `INSERT`, `UPDATE`, `DELETE`, `db.query`, `pool.query`, `.execute(`, `.raw(`, `knex(`, `prisma.`, `sequelize.` in the same file types. These are candidates for logic-bug analysis.
+- LLM/AI workload files: search for files containing `openai`, `anthropic`, `langchain`, `llm`, `chat.completions`, `embeddings`, `prompt`, `generate_content`, `GenerativeModel` in the same file types. These require LLM-specific security checks on top of standard app security.
 
 List each file found before proceeding.
 
